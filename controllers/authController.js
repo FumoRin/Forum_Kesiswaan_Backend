@@ -6,16 +6,14 @@ exports.signup = async (req, res) => {
     try {
         const { email, password, role, no_hp, full_name, school } = req.body;
         
-        // Cek email sudah terdaftar
+       
         const [user] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
         if (user.length > 0) {
             return res.status(400).json({ message: 'Email already exists' });
         }
 
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Simpan user baru
         const [result] = await db.promise().query(
             'INSERT INTO users (email, password, role, no_hp, full_name, school) VALUES (?, ?, ?, ?, ?, ?)',
             [email, hashedPassword, role || 'user', no_hp, full_name, school]
@@ -34,7 +32,6 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
         
-        // Cek user exists
         const [users] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
         if (users.length === 0) {
             return res.status(401).json({ message: 'Invalid credentials' });
@@ -42,13 +39,11 @@ exports.login = async (req, res) => {
 
         const user = users[0];
         
-        // Verifikasi password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Buat JWT token
         const token = jwt.sign(
             { userId: user.id, role: user.role },
             process.env.JWT_SECRET,

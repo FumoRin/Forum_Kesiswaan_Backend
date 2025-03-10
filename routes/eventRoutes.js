@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require('../config/database');
 const { authenticate, authorize } = require('../middleware/auth');
 
-// Get all events (public access)
 router.get('/', (req, res) => {
     const query = 'SELECT * FROM events';
     db.query(query, (err, results) => {
@@ -16,7 +15,6 @@ router.get('/', (req, res) => {
     });
 });
 
-// Get single event (public access)
 router.get('/:id', (req, res) => {
     const query = 'SELECT * FROM events WHERE id = ?';
     db.query(query, [req.params.id], (err, results) => {
@@ -31,7 +29,6 @@ router.get('/:id', (req, res) => {
     });
 });
 
-// Create event (admin only)
 router.post('/', authenticate, authorize(['admin']), (req, res) => {
     const { title, school, event, date, content, url_picture } = req.body;
     const query = `
@@ -55,7 +52,6 @@ router.post('/', authenticate, authorize(['admin']), (req, res) => {
         });
 });
 
-// Update event (admin only)
 router.put('/:id', authenticate, authorize(['admin']), (req, res) => {
     const { title, school, event, date, content, url_picture } = req.body;
     const query = `
@@ -86,7 +82,6 @@ router.put('/:id', authenticate, authorize(['admin']), (req, res) => {
         });
 });
 
-// Delete event (admin only)
 router.delete('/:id', authenticate, authorize(['admin']), (req, res) => {
     const query = 'DELETE FROM events WHERE id = ?';
     db.query(query, [req.params.id], (err, results) => {

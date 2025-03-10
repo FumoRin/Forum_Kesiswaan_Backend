@@ -1,10 +1,9 @@
-// routes/blogRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 const { authenticate, authorize } = require('../middleware/auth');
 
-// Get all blog posts (publik)
 router.get('/', async (req, res) => {
   try {
     const [posts] = await db.promise().query('SELECT * FROM blog_posts');
@@ -14,7 +13,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get single blog post (publik)
 router.get('/:id', async (req, res) => {
   try {
     const [posts] = await db.promise().query('SELECT * FROM blog_posts WHERE id = ?', [req.params.id]);
@@ -25,7 +23,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create blog post (admin only)
 router.post('/', authenticate, authorize(['admin']), async (req, res) => {
   const { title, content, author_id } = req.body;
   try {
@@ -39,7 +36,6 @@ router.post('/', authenticate, authorize(['admin']), async (req, res) => {
   }
 });
 
-// Update blog post (admin only)
 router.put('/:id', authenticate, authorize(['admin']), async (req, res) => {
   const { title, content } = req.body;
   try {
@@ -56,7 +52,6 @@ router.put('/:id', authenticate, authorize(['admin']), async (req, res) => {
   }
 });
 
-// Delete blog post (admin only)
 router.delete('/:id', authenticate, authorize(['admin']), async (req, res) => {
   try {
     const [result] = await db.promise().query(

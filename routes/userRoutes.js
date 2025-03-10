@@ -1,11 +1,9 @@
-// routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 const bcrypt = require('bcryptjs');
 const { authenticate, authorize } = require('../middleware/auth');
 
-// Get all users (Admin only)
 router.get('/', authenticate, authorize(['admin']), (req, res) => {
     const query = 'SELECT id, email, role, no_hp, full_name, school, created_at FROM users';
     db.query(query, (err, results) => {
@@ -18,7 +16,6 @@ router.get('/', authenticate, authorize(['admin']), (req, res) => {
     });
 });
 
-// Get single user (Admin only)
 router.get('/:id', authenticate, authorize(['admin']), (req, res) => {
     const query = 'SELECT id, email, role, no_hp, full_name, school, created_at FROM users WHERE id = ?';
     db.query(query, [req.params.id], (err, results) => {
@@ -33,12 +30,10 @@ router.get('/:id', authenticate, authorize(['admin']), (req, res) => {
     });
 });
 
-// Create user (Admin only)
 router.post('/', authenticate, authorize(['admin']), async (req, res) => {
     try {
         const { email, password, role, no_hp, full_name, school } = req.body;
         
-        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
         
         const query = `
@@ -69,14 +64,12 @@ router.post('/', authenticate, authorize(['admin']), async (req, res) => {
     }
 });
 
-// Update user (Admin only)
 router.put('/:id', authenticate, authorize(['admin']), async (req, res) => {
     try {
         const { email, password, role, no_hp, full_name, school } = req.body;
         let updates = [];
         let values = [];
-        
-        // Construct dynamic query
+
         if (email) {
             updates.push('email = ?');
             values.push(email);
@@ -133,7 +126,6 @@ router.put('/:id', authenticate, authorize(['admin']), async (req, res) => {
     }
 });
 
-// Delete user (Admin only)
 router.delete('/:id', authenticate, authorize(['admin']), (req, res) => {
     const query = 'DELETE FROM users WHERE id = ?';
     db.query(query, [req.params.id], (err, results) => {

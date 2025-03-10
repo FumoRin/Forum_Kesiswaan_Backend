@@ -1,10 +1,9 @@
-// routes/profileRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
 const { authenticate } = require('../middleware/auth');
 
-// Get own profile
 router.get('/', authenticate, async (req, res) => {
   try {
     const [result] = await db.promise().query(
@@ -18,7 +17,6 @@ router.get('/', authenticate, async (req, res) => {
   }
 });
 
-// Update own profile
 router.put('/', authenticate, async (req, res) => {
   const { email, full_name, no_hp, school } = req.body;
   try {

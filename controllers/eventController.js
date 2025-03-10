@@ -1,6 +1,5 @@
 const db = require('../config/database');
 
-// Get all events
 exports.getAllEvents = async (req, res) => {
     try {
         const [events] = await db.promise().query('SELECT * FROM events');
@@ -10,7 +9,6 @@ exports.getAllEvents = async (req, res) => {
     }
 };
 
-// Get single event
 exports.getEventById = async (req, res) => {
     try {
         const [event] = await db.promise().query('SELECT * FROM events WHERE id = ?', [req.params.id]);
@@ -23,7 +21,6 @@ exports.getEventById = async (req, res) => {
     }
 };
 
-// Create event
 exports.createEvent = async (req, res) => {
     const { title, school, event, date, content, url_picture } = req.body;
     try {
@@ -37,7 +34,6 @@ exports.createEvent = async (req, res) => {
     }
 };
 
-// Update event
 exports.updateEvent = async (req, res) => {
     const { title, school, event, date, content, url_picture } = req.body;
     try {
@@ -51,7 +47,6 @@ exports.updateEvent = async (req, res) => {
     }
 };
 
-// Delete event
 exports.deleteEvent = async (req, res) => {
     try {
         await db.promise().query('DELETE FROM events WHERE id = ?', [req.params.id]);

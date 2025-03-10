@@ -1,26 +1,22 @@
-// routes/uploadRoutes.js
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const { authenticate } = require('../middleware/auth');
 
-// Konfigurasi penyimpanan file dengan multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // Folder penyimpanan file
+    cb(null, 'uploads/'); 
   },
   filename: (req, file, cb) => {
-    // Menyimpan file dengan nama unik menggunakan timestamp
+    
     const ext = path.extname(file.originalname);
     cb(null, file.fieldname + '-' + Date.now() + ext);
   }
 });
 
-// Filter untuk hanya menerima file gambar
 const fileFilter = (req, file, cb) => {
   if (!file.mimetype.startsWith('image/')) {
-    // Jika file bukan image, kembalikan error
     return cb(new Error('Only image files are allowed!'), false);
   }
   cb(null, true);
@@ -29,9 +25,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage, fileFilter });
 
 router.post('/', authenticate, upload.single('file'), async (req, res) => {
-  // Token UploadThing (V-7+)
   const uploadToken = process.env.UPLOADTHING_TOKEN;
-  // Legacy keys
   const legacySecret = process.env.UPLOADTHING_SECRET;
   const legacyAppId = process.env.UPLOADTHING_APP_ID;
 
@@ -39,7 +33,6 @@ router.post('/', authenticate, upload.single('file'), async (req, res) => {
     return res.status(400).json({ message: 'No file uploaded' });
   }
 
-  // Simulasi proses upload ke UploadThing atau proses lainnya
   res.status(200).json({
     message: 'Image uploaded successfully',
     file: req.file

@@ -1,4 +1,3 @@
-// routes/searchRoutes.js
 const express = require('express');
 const router = express.Router();
 const db = require('../config/database');
@@ -11,12 +10,10 @@ router.get('/', async (req, res) => {
   const searchQuery = `%${query}%`;
 
   try {
-    // Mencari di blog posts
     const [blogs] = await db.promise().query(
       'SELECT * FROM blog_posts WHERE title LIKE ? OR content LIKE ?',
       [searchQuery, searchQuery]
     );
-    // Mencari di user (misalnya berdasarkan nama lengkap atau email)
     const [users] = await db.promise().query(
       'SELECT id, email, full_name FROM users WHERE full_name LIKE ? OR email LIKE ?',
       [searchQuery, searchQuery]
