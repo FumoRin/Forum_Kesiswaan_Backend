@@ -16,6 +16,7 @@ app.use("/search", require("./routes/searchRoutes"));
 app.use("/blog", require("./routes/blogRoutes"));
 app.use("/profile", require("./routes/profileRoutes"));
 app.use("/upload", require("./routes/uploadRoutes"));
+app.use("/stats", require("./routes/statsRoutes"));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
